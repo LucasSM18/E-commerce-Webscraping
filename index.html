@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparador de Preços - Encontre os Melhores Preços</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="title">Comparador de Preços</h1>
+            <p class="subtitle">Encontre os melhores preços em sites confiáveis</p>
+        </header>
+
+        <!-- Search Form -->
+        <div class="search-card">
+            <form id="searchForm" class="search-form">
+                <div class="search-input-wrapper">
+                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        class="search-input" 
+                        placeholder="Ex: notebook, celular, fone, teclado..."
+                        required
+                    >
+                </div>
+                <button type="submit" class="search-button" id="searchButton">
+                    <span id="buttonText">Buscar</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Features -->
+        <div id="features" class="features">
+            <div class="feature-card">
+                <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 7 7 17"></path>
+                    <path d="m7 7 10 10"></path>
+                    <path d="M17 7v10H7"></path>
+                </svg>
+                <h3 class="feature-title">Melhores Preços</h3>
+                <p class="feature-description">Comparamos preços em tempo real para você economizar</p>
+            </div>
+            <div class="feature-card">
+                <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path>
+                </svg>
+                <h3 class="feature-title">Sites Confiáveis</h3>
+                <p class="feature-description">Apenas lojas verificadas e com boa reputação</p>
+            </div>
+            <div class="feature-card">
+                <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m7.5 4.27 9 5.15"></path>
+                    <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path>
+                    <path d="m3.3 7 8.7 5 8.7-5"></path>
+                    <path d="M12 22V12"></path>
+                </svg>
+                <h3 class="feature-title">Frete Grátis</h3>
+                <p class="feature-description">Identificamos ofertas com frete grátis automaticamente</p>
+            </div>
+        </div>
+
+        <!-- Error Message -->
+        <div id="errorMessage" class="error-card" style="display: none;">
+            <p class="error-text"></p>
+        </div>
+
+        <!-- Results Header -->
+        <div id="resultsHeader" class="results-header" style="display: none;">
+            <h2 class="results-title">
+                <span id="totalFound">0</span> <span id="resultsText">resultados encontrados</span>
+            </h2>
+            <p class="results-subtitle">Ordenados do menor para o maior preço</p>
+        </div>
+
+        <!-- Results Container -->
+        <div id="resultsContainer" class="results-container"></div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="loading-state" style="display: none;">
+            <div class="spinner"></div>
+            <p class="loading-text">Buscando os melhores preços...</p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

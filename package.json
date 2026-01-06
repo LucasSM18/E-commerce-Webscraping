@@ -1,0 +1,26 @@
+{
+  "name": "comparador_de_ofertas",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "echo 'no build script'",
+    "test": "node --test",
+    "start": "node ./api/route.ts"
+  },
+  "description": "API de comparação de preços, que busca descontos em sites de e-commerce, ordenando do mais barato ao mais caro.",
+  "main": "script.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "cheerio": "^1.1.2",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "next": "^16.0.5"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.5",
+    "@types/node": "^24.10.1"
+  }
+}
