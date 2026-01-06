@@ -153,20 +153,31 @@ let isLoading = false;
 // }
 
 // Elementos DOM
-const searchForm = document.getElementById("searchForm")
-const searchInput = document.getElementById("searchInput")
-const searchButton = document.getElementById("searchButton")
-const buttonText = document.getElementById("buttonText")
-const features = document.getElementById("features")
-const errorMessage = document.getElementById("errorMessage")
-const resultsHeader = document.getElementById("resultsHeader")
-const resultsContainer = document.getElementById("resultsContainer")
-const loadingState = document.getElementById("loadingState")
-const totalFoundElement = document.getElementById("totalFound")
-const resultsText = document.getElementById("resultsText")
+const searchForm = document.getElementById("searchForm");
+const searchInput = document.getElementById("searchInput");
+const searchButton = document.getElementById("searchButton");
+const buttonText = document.getElementById("buttonText");
+const starRating = document.getElementById("starRating");
+const percentSlider = document.getElementById('percentSlider');
+const features = document.getElementById("features");
+const errorMessage = document.getElementById("errorMessage");
+const resultsHeader = document.getElementById("resultsHeader");
+const resultsContainer = document.getElementById("resultsContainer");
+const loadingState = document.getElementById("loadingState");
+const totalFoundElement = document.getElementById("totalFound");
+const resultsText = document.getElementById("resultsText");
+
+//
+starRating.innerHTML = starRatingDiv();
 
 // Event Listeners
 searchForm.addEventListener("submit", handleSearch)
+
+// Sincronizar slider e input de porcentagem
+percentSlider.addEventListener('input', (e) => {
+  //percentInput.value = e.target.value;
+  setRatingByPercent(e.target.value);
+});
 
 // Função principal de busca
 async function handleSearch(e) {
@@ -187,7 +198,9 @@ async function handleSearch(e) {
     // Busca nos dados de demonstração
     let foundProducts = [];
 
-    const response = await fetch(`http://localhost:3000/scraper?q=${encodeURIComponent(query)}`);
+    const response = await fetch(`http://localhost:3000/scraper?q=${encodeURIComponent(query)}`, {
+      method: 'GET'
+    });
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const data = await response.json();
 
@@ -214,7 +227,7 @@ async function handleSearch(e) {
     // }
 
     // Ordena do mais barato para o mais caro
-    foundProducts.sort((a, b) => a.price - b.price);
+    //foundProducts.sort((a, b) => a.price - b.price);
 
     if (foundProducts.length > 0) {
       displayResults(foundProducts, foundProducts.length);
@@ -311,13 +324,7 @@ function createProductCard(product) {
                     </div>
 
                     <div class="product-meta">
-                        <div class="trust-score">
-                            <svg class="shield-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path>
-                            </svg>
-                            <span>${product.trustScore}% confiável</span>
-                        </div>
-                        
+                        ${starRatingDiv(product.trustScore, false)}
                         ${hasFreeShipping ? '<span class="badge badge-shipping">Frete Grátis</span>' : ""}
                         ${hasDiscount ? `<span class="badge badge-discount">${product.discount}% OFF</span>` : ""}
                     </div>
@@ -359,4 +366,91 @@ function escapeHtml(text) {
     "'": "&#039;",
   }
   return text.replace(/[&<>"']/g, (m) => map[m])
+}
+
+function starRatingDiv(rating, editable) {
+  const starRatingContainer = document.createElement('div');
+  starRatingContainer.id = 'starRating';
+  starRatingContainer.className = 'trust-score';
+  //
+  const svgStar = `
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+    </svg>
+  `;
+  rating = rating ? Math.max(0, Math.min(5, rating)) : 0 
+  //
+  for (let i = 0; i < 5; i++){
+    const starValue = i + 1;
+    let rightClip = 100;
+
+    if (rating >= starValue) {
+      rightClip = 0
+    }
+    else if (rating > i && rating < starValue){
+      const percentage = ((rating - i) * 100);
+      rightClip = rightClip - percentage;
+    }
+    //
+    const starDiv = document.createElement('div');
+    starDiv.className = 'star';
+    starDiv.innerHTML = `
+        <div class="star-empty">${svgStar}</div>
+        <div class="star-filled" style="clip-path: inset(0 ${rightClip}% 0 0);">${svgStar}</div>
+    `;
+    starDiv.addEventListener("click", () => setRatingByNumber(i + 1));
+    starRatingContainer.append(starDiv);
+  }
+  //
+  return starRatingContainer.outerHTML;
+}
+
+// Função para atualizar as estrelas
+function updateStars(rating) {
+  const stars = document.querySelectorAll('.star');
+      
+  stars.forEach((star, index) => {
+      const filledPart = star.querySelector('.star-filled');
+      const starValue = index + 1;
+        
+      if (rating >= starValue) {
+        // Estrela completamente preenchida
+        filledPart.style.clipPath = 'inset(0 0 0 0)';
+      } else if (rating > index && rating < starValue) {
+        // Estrela parcialmente preenchida
+        const percentage = ((rating - index) * 100);
+        const rightClip = 100 - percentage;
+        filledPart.style.clipPath = `inset(0 ${rightClip}% 0 0)`;
+      } else {
+        // Estrela vazia
+        filledPart.style.clipPath = 'inset(0 100% 0 0)';
+    }
+  });
+}
+
+// Definir rating por porcentagem (0-100%)
+function setRatingByPercent(percent) {
+  percent = Math.max(0, Math.min(100, percent));
+  const rating = (percent / 100) * 5;
+      
+  updateStars(rating);
+  displayValue.textContent = rating.toFixed(1);
+  displayPercent.textContent = Math.round(percent);
+  numberInput.value = rating.toFixed(1);
+}
+
+// Definir rating por valor numérico (1-5)
+function setRatingByNumber(value) {
+  if (value === undefined) {
+    value = parseFloat(numberInput.value);
+  }
+  value = Math.max(0, Math.min(5, value));
+      
+  updateStars(value);
+  displayValue.textContent = value.toFixed(1);
+      
+  const percent = Math.round((value / 5) * 100);
+  displayPercent.textContent = percent;
+  percentInput.value = percent;
+  percentSlider.value = percent;
 }

@@ -1,16 +1,20 @@
+export interface SortCriterion<T> {
+  property: keyof T,
+  direction?: 'asc' | 'desc',
+  transform?: (value: any) => any,
+  stringSimilarity?: boolean
+}
+
 export interface Scraper {
   searchUrl: string,
-  query: string,
+  query?: string,
   listProducts: string,
   title: string,
   site: string
-  priceText: string,
-  priceCents: string,
-  price?: string | null,
-  originalpriceText: string,
-  originalpriceCents: string,
+  price: string,
   originalprice?: string | null,
-  shipping: string,
+  discount?: string,
+  shipping?: string,
   url: string,
   image: string,
   trustScore: string
@@ -22,7 +26,7 @@ export interface Product {
   price: number
   originalPrice: number | null
   discount: number
-  trustScore: string
+  trustScore: number
   shipping: { free: boolean }
   url: string
   image: string
